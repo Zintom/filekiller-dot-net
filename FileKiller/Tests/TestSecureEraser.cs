@@ -36,7 +36,7 @@ namespace Tests
         {
             var stream = new MemoryStream();
             stream.Write(stackalloc byte[8190]);
-            stream.Write(stackalloc byte[2] { 6, 9});
+            stream.Write(stackalloc byte[2] { 6, 9 });
             // Total stream size at this point is 4096
 
             // Re-size the stream down to leave two bytes at the end of the "cluster".
