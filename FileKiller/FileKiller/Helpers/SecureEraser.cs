@@ -8,9 +8,9 @@ namespace Zintom.FileKiller.Helpers
     internal class SecureEraser
     {
 
-        [DllImport("kernel32.dll", SetLastError=true, CharSet=CharSet.Unicode)]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetDiskFreeSpaceW([In, MarshalAs(UnmanagedType.LPWStr)]string lpRootPathName, out uint lpSectorsPerCluster, out uint lpBytesPerSector, out uint lpNumberOfFreeClusters, out uint lpTotalNumberOfClusters);
+        private static extern bool GetDiskFreeSpaceW([In, MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName, out uint lpSectorsPerCluster, out uint lpBytesPerSector, out uint lpNumberOfFreeClusters, out uint lpTotalNumberOfClusters);
 
         /// <summary>
         /// Gets the cluster size for the drive that the given file resides on.
@@ -22,7 +22,10 @@ namespace Zintom.FileKiller.Helpers
         }
 
         /// <summary>
-        /// Overwrites the given stream with zeros.
+        /// Overwrites all the bytes in the given <paramref name="stream"/> to 0.
+        /// <para>
+        /// <b>Warning: </b> This is a destructive method.
+        /// </para>
         /// </summary>
         internal static void ZeroStream(Stream stream)
         {
@@ -50,7 +53,10 @@ namespace Zintom.FileKiller.Helpers
         }
 
         /// <summary>
-        /// 
+        /// Zero's the bytes in the cluster tip of the given file if a cluster tip is present.
+        /// <para>
+        /// <b>Warning: </b> This is a destructive method. The file is not shrunk back down once the bytes are written.
+        /// </para>
         /// </summary>
         /// <param name="fileStream"></param>
         /// <param name="clusterSize">The cluster size for the given file.</param>
