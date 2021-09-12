@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 using Zintom.FileKiller.Helpers;
 
@@ -8,17 +9,17 @@ namespace Tests
     public class TestSecureEraser
     {
         [TestMethod]
-        public void SecureEraserZeroStream_AllZeros()
+        public void SecureEraser_ZeroStream_AllZeros()
         {
-            // Create a nice piece of ordered data, each array item value increments by one, modulo 255.
-            byte[] orderedData = new byte[ushort.MaxValue];
-            for (int i = 1; i < orderedData.Length; i++)
-            {
-                orderedData[i] = (byte)(i % 255);
-            }
+            using var stream = new MemoryStream();
 
-            // Wrap our data in a stream.
-            var stream = new MemoryStream(orderedData);
+            // Create a nice piece of ordered data, each array item value increments by one, modulo 255.
+            Span<byte> data = new byte[ushort.MaxValue];
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = (byte)((i + 1) % 255);
+            }
+            stream.Write(data);
 
             // Zero the stream.
             SecureEraser.ZeroStream(stream);
@@ -32,9 +33,9 @@ namespace Tests
         }
 
         [TestMethod]
-        public void SecureEraseClusterTip_AllZeros()
+        public void SecureEraser_ZeroClusterTip_NotFullCluster_TipClears()
         {
-            var stream = new MemoryStream();
+            using var stream = new MemoryStream();
             stream.Write(stackalloc byte[8190]);
             stream.Write(stackalloc byte[2] { 6, 9 });
             // Total stream size at this point is 4096
@@ -44,7 +45,9 @@ namespace Tests
             stream.Position = 8190;
 
             /// For this test we use the NTFS default cluster size of 4096.
-            SecureEraser.ZeroClusterTips(stream, 4096);
+            bool result = SecureEraser.ZeroClusterTip(stream, 4096);
+
+            Assert.IsTrue(result);
 
             // The zero cluster tips method should have written out zeros to the end of the cluster size,
             // meaning the length should have increased by two.
@@ -56,6 +59,27 @@ namespace Tests
             int was9 = stream.ReadByte();
 
             Assert.IsTrue(was6 == 0 && was9 == 0);
+        }
+
+        [TestMethod]
+        public void SecureEraser_ZeroClusterTip_ClusterIsFull_ReturnsFalse()
+        {
+            using var stream = new MemoryStream();
+            stream.Write(stackalloc byte[4096]);
+
+            bool result = SecureEraser.ZeroClusterTip(stream, 4096);
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void SecureEraser_ZeroClusterTip_StreamEmpty_ReturnsFalse()
+        {
+            using var stream = new MemoryStream();
+
+            bool result = SecureEraser.ZeroClusterTip(stream, 4096);
+
+            Assert.IsFalse(result);
         }
     }
 }
