@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileKiller", "FileKiller\FileKiller.csproj", "{CE81ECAB-1A27-4A39-98A8-3587F3E04C68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileKiller", "FileKiller\FileKiller.csproj", "{CE81ECAB-1A27-4A39-98A8-3587F3E04C68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3898FE22-B198-41F5-B8B5-7CF5F81616DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{3898FE22-B198-41F5-B8B5-7CF5F81616DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02E42511-A7AB-4E7D-86AB-DF3B6FE32B01}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
